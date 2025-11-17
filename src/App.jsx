@@ -9,15 +9,29 @@ function MonButton({onAdd}) {
 }
 
 
-
-
 function App() {
 
   const [inputValue, setInputValue] = useState("");
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState([]);
 
   function addTodo() {
-    setTodos([...todos, inputValue])
+    if (inputValue.trim() === "") return;
+    setTodos([...todos, { id: Date.now(), text: inputValue.trim(), done: false}])
+    console.log(todos)
+    setInputValue("");
+  }
+
+  function ToggleTodo(id) {
+    setTodos(todos.map(todo => todo.id === id ? {...todo, done : !todo.done} : todo))
+
+  }
+
+  function removeTodo(id) {
+
+    setTodos(todos.filter(todo => todo.id !== id))
+   
+
+
   }
 
   return (
@@ -25,7 +39,10 @@ function App() {
     <h1 className="text-3xl font-bold  text-white"> Welcome to my Todolist </h1>
     <input type='text' value={inputValue} onChange={e => setInputValue(e.target.value)}></input>
     <MonButton onAdd={addTodo}/>
-    <p className="text-white">{todos.map(list => <li> {list}</li>)}</p>
+    <ul className="text-white mt-4 ">{todos.map(todo => <li className="mt-4 flex items-center" key={todo.id}><span onClick={() => ToggleTodo(todo.id)}
+     className={`w-6 h-6 rounded-full border cursor-pointer 
+    ${todo.done ? 'bg-green-800 border-green-800' : 'bg-white border-gray-400'}`}
+></span> <span className='ml-4'>{todo.text}</span><button onClick={() => removeTodo(todo.id)} className='ml-6 size-8 border bg-red-900' >X</button> </li> )}</ul>
     </div>
   )
 }

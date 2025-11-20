@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -15,6 +15,21 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [isLoaded, setisLoaded] = useState(false);
+
+  useEffect(() => {
+  const storedTodos = localStorage.getItem("todos");
+  if (storedTodos) {
+    setTodos(JSON.parse(storedTodos));
+  }
+  setisLoaded(true)
+}, []);
+
+  useEffect(() => {
+    if(isLoaded === true)
+    localStorage.setItem("todos", JSON.stringify(todos));
+
+  }, [todos, isLoaded]);
 
   function addTodo() {
     if (inputValue.trim() === "") return;
@@ -47,6 +62,8 @@ function App() {
   function removeTodo(id) {
   setTodos(todos.filter(todo => todo.id !== id))
   }
+
+
 
   
 
